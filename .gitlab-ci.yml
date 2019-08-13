@@ -1,0 +1,35 @@
+image: docker
+stages:
+- build
+- test
+- deploy
+
+build_maven:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+  - echo "build maven....."
+  - echo "mvn clean"
+  - echo "done"
+  tags:
+  - dev 
+
+test_springboot:
+  stage: test
+  script:
+  - echo "run java test....."
+  - echo "java -test"
+  - echo "done"
+  tags:
+  - dev 
+
+deploy_springboot:
+  stage: deploy
+  script:
+  - echo "deploy springboot...."
+  - docker build  -t demo:v1 .
+  #- docker tag  demo:v1  192.168.83.8:5000/demo:v1
+  #- docker push 192.168.83.8:5000/demo:v1
+  - docker run  -d  --name my  -p 808:8080 demo:v1
+  tags:
+  - dev
